@@ -1,1 +1,82 @@
+1.给定一个整数a，请编写一个函数，计算并返回以下数列的和： 1 + 2 + 3 + ... + a (a > 0 && a <= 2^32)
+uint64_t sum(uint32_t a)
+{
+    if (a % 2 == 0)
+    {
+        return (1 + a) * (a / 2);
+    }
+    else
+    {
+        return (1 + a) / 2 * a;
+    }
+}
 
+2.给定一个float数组，请编写一个函数，计算数组中出现次数最多的数字及其出现次数,如果出现次数最多的数字有多个，返回任意一个即可。(数组中的所有数字均为随机数生成并且保留一位小数)
+float countnumbers(std::vector<float>& array, uint32_t& count)
+{
+    std::unordered_map<float, uint32_t> m;
+    float ret = array[0];
+    count = 1;
+    for (float f : array)
+    {
+        m[f]++;
+        if (m[f] > count)
+        {
+            count = m[f];
+            ret = f;
+        }
+    }
+    return ret;
+}
+
+3.给定一个从小到大排好序的整数数组，和一个需要查找的数字a，请编写一个函数,找到a时返回第一个a的位置,找不到时返回-1。（要求效率尽可能高）
+void find_r(int& first, std::vector<int32_t>& array, int start, int end, int a)
+{
+    if (end < start)
+    {
+        return;
+    }
+    if (end == start)
+    {
+        if (array[start] == a)
+        {
+            if (first == -1 || start < first)
+            {
+                first = start;
+            }
+        }
+        return;
+    }
+    if (a > array[end] || a < array[start])
+    {
+        return;
+    }
+    if (end - start == 1)
+    {
+		if (array[start] == a)
+		{
+			if (first == -1 || start < first)
+			{
+				first = start;
+			}
+		}
+		if (array[end] == a)
+		{
+			if (first == -1 || end < first)
+			{
+				first = end;
+			}
+		}
+        return;
+    }
+	int pivot = (end - start + 1) / 2;
+	find_r(first, array, start, pivot, a);
+	find_r(first, array, pivot + 1, end, a);
+}
+
+int32_t find(std::vector<int32_t>& array, int a)
+{
+    int ret = -1;
+	find_r(ret, array, 0, array.size() - 1, a);
+    return ret;
+}
